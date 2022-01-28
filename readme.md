@@ -6,7 +6,7 @@ Make your own discord bot for this. Pretty simple. Goes through channels, gets l
 
 ```
 usage: lurker.py [-h] [--limit-role LIMIT_ROLE] [--day-cutoff DAY_CUTOFF]
-                 [--for-real]
+                 [--message-limit MESSAGE_LIMIT] [--for-real]
                  TOKEN SERVER_ID ROLE_ID
 
 positional arguments:
@@ -20,5 +20,7 @@ optional arguments:
                         Role to target
   --day-cutoff DAY_CUTOFF
                         Day delta cutoff
+  --message-limit MESSAGE_LIMIT
+                        Number of messages to go back for each channel
   --for-real            Really kick or add roles
 ```

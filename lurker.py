@@ -11,6 +11,7 @@ class Lurker(discord.Client):
         self.cutoff_date = datetime.now() - timedelta(days=kwargs["cutoff"])
         self.target_limit_role = kwargs.get("limit_role")
         self.for_real = kwargs["for_real"]
+        self.message_limit = kwargs["message_limit"]
         super().__init__(*args, **kwargs)
 
     async def on_ready(self):
@@ -30,7 +31,7 @@ class Lurker(discord.Client):
         last_messages = {}
         for channel in server.text_channels:
             print(f"Looking in channel {channel.name} ...")
-            async for message in channel.history(limit=100):
+            async for message in channel.history(limit=self.message_limit):
                 # If last message for the author is newer than what we have, reset to that message
                 last_messages.setdefault(message.author, message)
                 if message.created_at > last_messages[message.author].created_at:
@@ -76,6 +77,12 @@ if __name__ == "__main__":
     parser.add_argument("--limit-role", type=int, help="Role to target")
     parser.add_argument("--day-cutoff", type=int, default=180, help="Day delta cutoff")
     parser.add_argument(
+        "--message-limit",
+        type=int,
+        default=100000,
+        help="Number of messages to go back for each channel",
+    )
+    parser.add_argument(
         "--for-real",
         default=False,
         action="store_true",
@@ -93,6 +100,7 @@ if __name__ == "__main__":
         cutoff=args.day_cutoff,
         limit_role=args.limit_role,
         for_real=args.for_real,
+        message_limit=args.message_limit,
         intents=intents,
     )
     lurker.run(args.TOKEN)
